@@ -581,6 +581,11 @@ static int cpufreq_governor_savagedzen(struct cpufreq_policy *new_policy,
                 unsigned int event)
 {
         unsigned int cpu = new_policy->cpu;
+		unsigned int min_freq = ~0;
+		unsigned int max_freq = 0;
+		unsigned int i;
+		struct cpufreq_frequency_table *freq_table;
+
         int rc;
         struct savagedzen_info_s *this_savagedzen = &per_cpu(savagedzen_info, cpu);
 
@@ -604,6 +609,19 @@ static int cpufreq_governor_savagedzen(struct cpufreq_policy *new_policy,
                 this_savagedzen->cur_policy = new_policy;
                 this_savagedzen->enable = 1;
 
+				freq_table = cpufreq_frequency_get_table(new_policy->cpu);
+				for (i = 0; (freq_table[i].frequency != CPUFREQ_TABLE_END); i++) {
+					unsigned int freq = freq_table[i].frequency;
+					if (freq == CPUFREQ_ENTRY_INVALID) {
+						continue;
+					}
+					if (freq < min_freq)	
+						min_freq = freq;
+					if (freq > max_freq)
+						max_freq = freq;
+				}
+				sleep_max_freq = min_freq;								//Minimum CPU frequency in table
+				sleep_wakeup_freq = freq_table[(i-1)/2].frequency > min_freq ? freq_table[(i-1)/2].frequency : max_freq;		//Value in midrange of available CPU frequencies if sufficient number of freq bins available
                 // notice no break here!
 
         case CPUFREQ_GOV_LIMITS:
