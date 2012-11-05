@@ -76,9 +76,9 @@ static struct snddev_icodec_data snddev_iearpiece_data = {
 	.pamp_on = NULL,
 	.pamp_off = NULL,
 	.property = SIDE_TONE_MASK,
-	.max_voice_rx_vol[VOC_NB_INDEX] = -200,
+	.max_voice_rx_vol[VOC_NB_INDEX] = 0,
 	.min_voice_rx_vol[VOC_NB_INDEX] = -1700,
-	.max_voice_rx_vol[VOC_WB_INDEX] = -200,
+	.max_voice_rx_vol[VOC_WB_INDEX] = 0,
 	.min_voice_rx_vol[VOC_WB_INDEX] = -1700
 };
 
